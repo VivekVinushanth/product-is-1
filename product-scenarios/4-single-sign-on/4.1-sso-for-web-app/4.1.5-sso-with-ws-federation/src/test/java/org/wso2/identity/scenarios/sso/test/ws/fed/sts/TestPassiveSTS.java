@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
@@ -254,6 +255,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
                     "Here are some helpful information to analyze the root cause. responseStatus: %s, " +
                     "resultPage: %s", response.getStatusLine(), resultPage));
         }
+        fail("checkforresltpage===================="+resultPage);
         assertTrue(successfullyRedirected, "Passive STS Login failed for: " + this.config);
         assertTrue(resultPage.contains("RequestSecurityTokenResponseCollection"), "Passive STS " +
                 "Login response doesn't have wresult for: " + this.config);
