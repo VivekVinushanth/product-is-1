@@ -123,7 +123,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         this.passiveStsURL = backendURL + PASSIVESTS_URI_CONTEXT;
-        passiveStsSampleAppURL = String.format(PASSIVE_STS_SAMPLE_APP_URL, webAppHost);
+        passiveStsSampleAppURL = String.format("%s/PassiveSTSSampleApp/", webAppHost);
         commonAuthUrl = backendURL + COMMONAUTH_URI_CONTEXT;
         super.createUser(this.config, remoteUSMServiceClient, "default");
         this.username = config.getUser().getUsername();
@@ -211,7 +211,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         HttpResponse response;
         response = sendGetRequest(client, passiveStsSampleAppURL, null);
-        fail("check for error ===================="+response);
+
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null");
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Invalid Response");
