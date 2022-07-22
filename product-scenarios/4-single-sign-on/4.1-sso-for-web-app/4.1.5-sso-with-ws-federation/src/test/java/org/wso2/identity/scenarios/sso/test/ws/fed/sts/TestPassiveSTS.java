@@ -211,7 +211,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         HttpResponse response;
         response = sendGetRequest(client, passiveStsSampleAppURL, null);
-
+        fail("check for error ===================="+response);
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null");
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Invalid Response");
@@ -255,7 +255,6 @@ public class TestPassiveSTS extends ScenarioTestBase {
                     "Here are some helpful information to analyze the root cause. responseStatus: %s, " +
                     "resultPage: %s", response.getStatusLine(), resultPage));
         }
-        fail("checkforresltpage===================="+resultPage);
         assertTrue(successfullyRedirected, "Passive STS Login failed for: " + this.config);
         assertTrue(resultPage.contains("RequestSecurityTokenResponseCollection"), "Passive STS " +
                 "Login response doesn't have wresult for: " + this.config);
