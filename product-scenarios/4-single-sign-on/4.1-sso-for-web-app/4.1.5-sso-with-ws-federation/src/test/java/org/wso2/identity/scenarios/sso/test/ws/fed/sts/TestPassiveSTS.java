@@ -123,7 +123,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         this.passiveStsURL = backendURL + PASSIVESTS_URI_CONTEXT;
-        passiveStsSampleAppURL = String.format("%s/PassiveSTSSampleApp/", webAppHost);
+        passiveStsSampleAppURL = String.format(PASSIVE_STS_SAMPLE_APP_URL, webAppHost);
         commonAuthUrl = backendURL + COMMONAUTH_URI_CONTEXT;
         super.createUser(this.config, remoteUSMServiceClient, "default");
         this.username = config.getUser().getUsername();
@@ -161,7 +161,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
             opicAuthenticationRequest.setInboundAuthType("passivests");
             Property property = new Property();
             property.setName("passiveSTSWReply");
-            property.setValue(passiveStsSampleAppURL+"index.jsp");
+            property.setValue(passiveStsSampleAppURL);
             opicAuthenticationRequest.setProperties(new Property[]{property});
             authRequestList.add(opicAuthenticationRequest);
         }
@@ -278,8 +278,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
     @Test(alwaysRun = true, description = "4.1.5.6", dependsOnMethods = {"testSendLoginRequestPost"})
     public void testPassiveSAML2Assertion() throws Exception {
-        String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL+"index.jsp" + "&wtrealm" +
-                "=PassiveSTSSampleApp";
+        String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL+ "&wtrealm" + "=PassiveSTSSampleApp";
         String wreqParam = "&wreq=%3Cwst%3ARequestSecurityToken+xmlns%3Awst%3D%22http%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fws-sx%2Fws-trust%2F200512%22%3E%3Cwst%3ATokenType%3Ehttp%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
