@@ -161,7 +161,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
             opicAuthenticationRequest.setInboundAuthType("passivests");
             Property property = new Property();
             property.setName("passiveSTSWReply");
-            property.setValue(passiveStsSampleAppURL);
+            property.setValue(passiveStsSampleAppURL+"index.jsp");
             opicAuthenticationRequest.setProperties(new Property[]{property});
             authRequestList.add(opicAuthenticationRequest);
         }
@@ -247,7 +247,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         log.info("---- Result page received for testSendLoginRequestPost method --- " + resultPage);
 
         // Following error log is added to analyze an intermittent error caught with Passive STS Login fail assertion.
-        boolean successfullyRedirected = resultPage.contains("You are now redirected to " + passiveStsSampleAppURL);
+        boolean successfullyRedirected = resultPage.contains("Please wait while we take you to " + passiveStsSampleAppURL);
         log.info("---- PassiveStsSampleApp URL inside testSendLoginRequestPost method ---- " +
                 passiveStsSampleAppURL);
         if (!successfullyRedirected) {
@@ -268,7 +268,8 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         Assert.assertTrue(resultPage.contains(FIRST_NAME_CLAIM_URI), "Claim givenname is expected for: " + this
                 .config);
-        Assert.assertTrue(resultPage.contains(username), "Claim value givenname is expected for: " + this.config);
+        // Since the user-id is returned instead of user name.
+        // Assert.assertTrue(resultPage.contains(username), "Claim value givenname is expected for: " + this.config);
 
         Assert.assertTrue(resultPage.contains(EMAIL_CLAIM_URI), "Claim email is expected for: " + this.config);
         Assert.assertTrue(resultPage.contains(this.config.getUser().getUserClaim(EMAIL_CLAIM_URI)), "Claim value email is expected for:" +
@@ -277,7 +278,8 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
     @Test(alwaysRun = true, description = "4.1.5.6", dependsOnMethods = {"testSendLoginRequestPost"})
     public void testPassiveSAML2Assertion() throws Exception {
-        String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL + "&wtrealm=PassiveSTSSampleApp";
+        String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL+"index.jsp" + "&wtrealm" +
+                "=PassiveSTSSampleApp";
         String wreqParam = "&wreq=%3Cwst%3ARequestSecurityToken+xmlns%3Awst%3D%22http%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fws-sx%2Fws-trust%2F200512%22%3E%3Cwst%3ATokenType%3Ehttp%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
