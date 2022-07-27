@@ -146,14 +146,6 @@
             <groupId>org.wso2.is</groupId>
             <artifactId>scenarios-commons</artifactId>
             <exclusions>
-<!--                <exclusion>-->
-<!--                    <groupId>org.wso2.orbit.commons-httpclient</groupId>-->
-<!--                    <artifactId>commons-httpclient</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>commons-httpclient</groupId>-->
-<!--                    <artifactId>commons-httpclient</artifactId>-->
-<!--                </exclusion>-->
                 <exclusion>
                     <groupId>org.apache.axis2.wso2</groupId>
                     <artifactId>axis2-client</artifactId>
