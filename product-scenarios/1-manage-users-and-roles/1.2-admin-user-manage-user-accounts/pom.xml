@@ -31,7 +31,7 @@
     <name>Admin user manage user accounts</name>
 
     <modules>
-        <module>1.2.1-manage-users-with-scim2</module>
+<!--        <module>1.2.1-manage-users-with-scim2</module>-->
         <module>1.2.2-manage-users-with-scim1</module>
         <module>1.2.3-manage-users-with-soap-services</module>
         <module>1.2.4-register-user-with-email-verification</module>
