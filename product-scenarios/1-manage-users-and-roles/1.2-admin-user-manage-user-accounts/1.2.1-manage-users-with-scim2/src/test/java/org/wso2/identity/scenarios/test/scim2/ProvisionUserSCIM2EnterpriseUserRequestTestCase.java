@@ -28,6 +28,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
@@ -35,8 +36,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTestBase {
+
+    Log log = LogFactory.getLog(ProvisionUserSCIM2EnterpriseUserRequestTestCase.class);
 
     private CloseableHttpClient client;
     private String userNameResponse;
@@ -219,6 +224,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
     private void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
+        log.info("response object: " + responseObj.toString());
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
         assertNotNull(userId);
 
