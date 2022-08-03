@@ -33,8 +33,7 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
@@ -244,7 +243,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
             assertNotNull(userIdentifier);
             return userIdentifier;
         } catch (Exception e) {
-            Assert.fail("Failed when trying to cleanup existing user.");
+            Assert.fail("Failed when trying to retrieve existing user.");
             return null;
         }
     }
