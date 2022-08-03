@@ -21,6 +21,7 @@ package org.wso2.identity.scenarios.test.scim2;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -29,18 +30,15 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
-import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 
 
 public class AnonymousProvisioningTestCase extends ScenarioTestBase {
@@ -54,16 +52,11 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     private String HOMEEMAIL = "scimhome@test.com";
     private String PRIMARYSTATE = "true";
 
-    private SCIM2CommonClient scim2Client;
-
-    HttpResponse response;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         client = HttpClients.createDefault();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
         super.init();
     }
 
@@ -122,26 +115,18 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
-        userId = getUserId();
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
+        String scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER + SEPERATOR + userId;
+
+        HttpDelete delete = new HttpDelete(scimUsersEndpoint);
+        delete.addHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(ADMIN_USERNAME, ADMIN_PASSWORD));
+        delete.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
+
+        HttpResponse response = client.execute(delete);
+        assertEquals(response.getStatusLine().getStatusCode(), org.apache.commons.httpclient.HttpStatus.SC_NO_CONTENT,
+                "User has not been deleted successfully");
+
+        EntityUtils.consume(response.getEntity());
     }
 
-    private String getUserId() {
-
-        try {
-            HttpResponse user = scim2Client.filterUserByAttribute(
-                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-            JSONObject list = getJSONFromResponse(user);
-            JSONArray resourcesArray = (JSONArray) list.get("Resources");
-            JSONObject userObject = (JSONObject) resourcesArray.get(0);
-            String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-            assertNotNull(userIdentifier);
-            return userIdentifier;
-        } catch (Exception e) {
-            Assert.fail("Failed when trying to retrieve existing user.");
-            return null;
-        }
-    }
 }
