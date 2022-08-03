@@ -27,12 +27,13 @@ import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
@@ -49,6 +50,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
 
     HttpResponse response;
+    private SCIM2CommonClient scim2Client;
 
 
     @BeforeClass(alwaysRun = true)
@@ -56,6 +58,29 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         client = HttpClients.createDefault();
         super.init();
+        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
+        cleanUpUser();
+    }
+
+
+    private void cleanUpUser() {
+
+        try {
+            HttpResponse user = scim2Client.filterUserByAttribute(
+                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
+            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
+            JSONObject list = getJSONFromResponse(user);
+            if (list.get("totalResults").toString().equals("1")) {
+                JSONArray resourcesArray = (JSONArray) list.get("Resources");
+                JSONObject userObject = (JSONObject) resourcesArray.get(0);
+                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
+                assertNotNull(userIdentifier);
+                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
+                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+            } // it is already cleared.
+        } catch (Exception e) {
+            fail("Failed when trying to delete existing user.");
+        }
     }
 
     @Test(description = "1.1.2.1.2.7")
@@ -87,6 +112,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
