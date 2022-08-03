@@ -63,7 +63,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "newusername");
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,

@@ -33,8 +33,7 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
@@ -92,6 +91,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(),  HttpStatus.SC_CREATED, "user not created.");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
@@ -121,7 +121,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
             assertNotNull(userIdentifier);
             return userIdentifier;
         } catch (Exception e) {
-            Assert.fail("Failed when trying to retrieve existing user.");
+            Assert.fail("Failed when trying to retrieve existing user.", e);
             return null;
         }
     }

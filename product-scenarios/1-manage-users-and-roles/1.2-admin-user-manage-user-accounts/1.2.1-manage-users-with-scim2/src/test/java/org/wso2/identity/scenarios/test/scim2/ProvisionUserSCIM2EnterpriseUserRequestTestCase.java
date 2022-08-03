@@ -243,7 +243,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
             assertNotNull(userIdentifier);
             return userIdentifier;
         } catch (Exception e) {
-            Assert.fail("Failed when trying to retrieve existing user.");
+            Assert.fail("Failed when trying to retrieve existing user.", e);
             return null;
         }
     }
