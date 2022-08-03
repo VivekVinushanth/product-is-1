@@ -21,7 +21,6 @@ package org.wso2.identity.scenarios.test.scim2;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -37,11 +36,10 @@ import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
+import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
@@ -57,6 +55,9 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     private String PRIMARYSTATE = "true";
 
     private SCIM2CommonClient scim2Client;
+
+    HttpResponse response;
+
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -121,18 +122,9 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
-        String scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
-                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER + SEPERATOR + getUserId();
-
-        HttpDelete delete = new HttpDelete(scimUsersEndpoint);
-        delete.addHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(ADMIN_USERNAME, ADMIN_PASSWORD));
-        delete.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
-
-        HttpResponse response = client.execute(delete);
-        assertEquals(response.getStatusLine().getStatusCode(), org.apache.commons.httpclient.HttpStatus.SC_NO_CONTENT,
-                "User has not been deleted successfully");
-
-        EntityUtils.consume(response.getEntity());
+        userId = getUserId();
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
     }
 
     private String getUserId() {
