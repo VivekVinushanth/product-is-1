@@ -49,6 +49,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class AnonymousProvisioningTestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2selfRegister";
     private CloseableHttpClient client;
     private String scimUsersEndpoint;
     private String userNameResponse;
@@ -57,40 +58,14 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     private String WORKEMAIL = "scimwrk@test.com";
     private String HOMEEMAIL = "scimhome@test.com";
     private String PRIMARYSTATE = "true";
-    private SCIM2CommonClient scim2Client;
-    private static final Log log = LogFactory.getLog(AnonymousProvisioningTestCase.class);
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         client = HttpClients.createDefault();
         super.init();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-        cleanUpUser();
     }
 
-    private void cleanUpUser() {
-
-        try {
-            HttpResponse user = scim2Client.filterUserByAttribute(
-                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-            JSONObject list = getJSONFromResponse(user);
-            if (list.get("totalResults").toString().equals("1")) {
-                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-                assertNotNull(userIdentifier);
-                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-                log.info("Deleted existing user");
-            } // it is already cleared.
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            fail("Failed when trying to delete existing user.");
-        }
-    }
 
     @Test(description = "1.1.2.1.2.15")
     private  void selfRegister() throws  Exception {
@@ -110,7 +85,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject emailWork = new JSONObject();
@@ -138,7 +113,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
 
         userNameResponse = ((JSONObject) responseObj).get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME);
+        assertEquals(userNameResponse, TEST_USER_NAME);
 
         userId = ((JSONObject) responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
         assertNotNull(userId);
