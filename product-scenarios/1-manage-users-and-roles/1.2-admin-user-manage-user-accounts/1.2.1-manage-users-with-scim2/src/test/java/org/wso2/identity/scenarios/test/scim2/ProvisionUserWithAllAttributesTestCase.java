@@ -27,18 +27,18 @@ import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
 public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
+    private static final String USER_NAME_FOR_TEST = "scim2CreateUserWithAllAttributes";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;
@@ -48,41 +48,14 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
     private String SEPERATOR = "/";
     private String WORKEMAIL = "test@work.com";
 
-
     HttpResponse response;
-    private SCIM2CommonClient scim2Client;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         client = HttpClients.createDefault();
         super.init();
-//        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-//        cleanUpUser();
     }
-
-//
-//    private void cleanUpUser() {
-//
-//        try {
-//            HttpResponse user = scim2Client.filterUserByAttribute(
-//                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-//            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-//            JSONObject list = getJSONFromResponse(user);
-//            if (list.get("totalResults").toString().equals("1")) {
-//                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-//                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-//                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-//                assertNotNull(userIdentifier);
-//                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-//                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-//            } // it is already cleared.
-//            Thread.sleep(5000);
-//        } catch (Exception e) {
-//            fail("Failed when trying to delete existing user.");
-//        }
-//    }
 
     @Test(description = "1.1.2.1.2.7")
     public void testSCIM2CreateUserWithAllAttributes() throws Exception {
@@ -94,7 +67,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2CreateUserWithAllAttributes");
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, USER_NAME_FOR_TEST);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject emailWork = new JSONObject();
@@ -116,7 +89,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, "scim2CreateUserWithAllAttributes", "username not found");
+        assertEquals(userNameResponse, USER_NAME_FOR_TEST, "username not found");
    }
 
     @AfterClass(alwaysRun = true)

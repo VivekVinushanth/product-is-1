@@ -33,13 +33,13 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBase {
 
+    private static final String USER_NAME_FOR_TEST = "scim2InvalidSCIMUserCreate";
     private CloseableHttpClient client;
     private String PASSWORD = "ab";
     private String scimUsersEndpoint;
@@ -54,30 +54,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
 
         client = HttpClients.createDefault();
         super.init();
-//        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-//        cleanUpUser();
     }
-//
-//    private void cleanUpUser() {
-//
-//        try {
-//            HttpResponse user = scim2Client.filterUserByAttribute(
-//                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-//            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-//            JSONObject list = getJSONFromResponse(user);
-//            if (list.get("totalResults").toString().equals("1")) {
-//                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-//                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-//                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-//                assertNotNull(userIdentifier);
-//                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-//                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-//            } // it is already cleared.
-//            Thread.sleep(5000);
-//        } catch (Exception e) {
-//            fail("Failed when trying to delete existing user.");
-//        }
-//    }
 
     @Test(description = "1.1.2.1.2.3")
     public void testInvalidSCIMUserCreate() throws Exception {
@@ -89,7 +66,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2InvalidSCIMUserCreate");
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, USER_NAME_FOR_TEST);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,

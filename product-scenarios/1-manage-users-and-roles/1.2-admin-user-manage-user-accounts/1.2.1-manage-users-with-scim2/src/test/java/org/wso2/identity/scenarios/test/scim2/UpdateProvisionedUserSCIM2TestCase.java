@@ -18,8 +18,6 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -35,21 +33,20 @@ import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
 import java.io.IOException;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
 public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2UpdateProvisionedUser";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;
@@ -62,42 +59,14 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
     JSONObject responseObj;
 
     HttpResponse response;
-    private SCIM2CommonClient scim2Client;
-    private static final Log log = LogFactory.getLog(UpdateProvisionedUserSCIM2TestCase.class);
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         client = HttpClients.createDefault();
         super.init();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-//        cleanUpUser();
         createUser();
     }
-
-//
-//    private void cleanUpUser() {
-//
-//        try {
-//            HttpResponse user = scim2Client.filterUserByAttribute(
-//                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-//            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-//            JSONObject list = getJSONFromResponse(user);
-//            if (list.get("totalResults").toString().equals("1")) {
-//                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-//                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-//                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-//                assertNotNull(userIdentifier);
-//                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-//                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-//                log.info("Deleted existing user");
-//            } // it is already cleared.
-//            Thread.sleep(5000);
-//        } catch (Exception e) {
-//            fail("Failed when trying to delete existing user.");
-//        }
-//    }
 
     public void createUser() throws Exception {
 
@@ -110,7 +79,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
 
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2UpdateProvisionedUser");
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
@@ -119,7 +88,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
                 "successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, "scim2UpdateProvisionedUser", "username not found");
+        assertEquals(userNameResponse, TEST_USER_NAME, "username not found");
 
         firstName = rootObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
         assertEquals(firstName.substring(14,19),SCIMConstants.GIVEN_NAME_CLAIM_VALUE,"The given first name " +
@@ -143,12 +112,12 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, NEW_NAME);
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,NEW_LAST_NAME);
         updateUserObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2UpdateProvisionedUser");
+        updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         updateUserObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         updateUserRequest(client, updateURL, updateUserObject, getCommonHeaders());
         userNameResponse = updateUserObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, "scim2UpdateProvisionedUser", "username not found");
+        assertEquals(userNameResponse, TEST_USER_NAME, "username not found");
 
         firstName = updateUserObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
         assertEquals(firstName.substring(14,22),NEW_NAME,"The given first name " +
