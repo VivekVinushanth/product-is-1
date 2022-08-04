@@ -18,6 +18,8 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -73,6 +75,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
 
     HttpResponse response;
     private SCIM2CommonClient scim2Client;
+    private static final Log log = LogFactory.getLog(ProvisionUserSCIM2EnterpriseUserRequestTestCase.class);
 
 
     @BeforeClass(alwaysRun = true)
@@ -80,30 +83,33 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
 
         client = HttpClients.createDefault();
         super.init();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-        cleanUpUser();
+//        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
+//        cleanUpUser();
     }
-    
-    private void cleanUpUser() {
-
-        try {
-            HttpResponse user = scim2Client.filterUserByAttribute(
-                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-            JSONObject list = getJSONFromResponse(user);
-            if (list.get("totalResults").toString().equals("1")) {
-                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-                assertNotNull(userIdentifier);
-                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-            } // it is already cleared.
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            fail("Failed when trying to delete existing user.");
-        }
-    }
+//
+//    private void cleanUpUser() {
+//
+//        try {
+//            HttpResponse user = scim2Client.filterUserByAttribute(
+//                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
+//            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
+//            JSONObject list = getJSONFromResponse(user);
+//            if (list.get("totalResults").toString().equals("1")) {
+//                JSONArray resourcesArray = (JSONArray) list.get("Resources");
+//                JSONObject userObject = (JSONObject) resourcesArray.get(0);
+//                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
+//                assertNotNull(userIdentifier);
+//                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
+//                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+//                log.info("Deleted existing user.");
+//            }  else {
+//                // it is already cleared.
+//                log.info("No user to clear.");
+//            }
+//        } catch (Exception e) {
+//            fail("Failed when trying to delete existing user.");
+//        }
+//    }
 
     @Test(description = "1.1.2.1.2.12")
     public void testSCIM2CreateEnterpriseUserRequest() throws Exception {
@@ -115,7 +121,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE,schemas);
         rootObject.put(SCIMConstants.ID_ATTRIBUTE,SCIMConstants.ID_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.EXTERNAL_ID_ATTRIBUTE,SCIMConstants.EXTERNAL_ID_ATTRIBUTE_VALUE);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2CreateEnterpriseUserRequest");
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject names = new JSONObject();
@@ -238,7 +244,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
                 "created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, "scim2CreateEnterpriseUserRequest", "username not found");
    }
 
     @AfterClass(alwaysRun = true)
