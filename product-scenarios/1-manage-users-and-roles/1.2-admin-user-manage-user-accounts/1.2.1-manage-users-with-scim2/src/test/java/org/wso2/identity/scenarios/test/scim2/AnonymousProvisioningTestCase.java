@@ -58,7 +58,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     private String HOMEEMAIL = "scimhome@test.com";
     private String PRIMARYSTATE = "true";
     private SCIM2CommonClient scim2Client;
-    private static final Log log = LogFactory.getLog(UserProvisionWithInsufficientPrivilegesSCIM2TestCase.class);
+    private static final Log log = LogFactory.getLog(AnonymousProvisioningTestCase.class);
 
 
     @BeforeClass(alwaysRun = true)

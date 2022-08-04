@@ -73,6 +73,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
                 SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                         Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
             } // it is already cleared.
+            Thread.sleep(5000);
         } catch (Exception e) {
             fail("Failed when trying to delete existing user.");
         }
