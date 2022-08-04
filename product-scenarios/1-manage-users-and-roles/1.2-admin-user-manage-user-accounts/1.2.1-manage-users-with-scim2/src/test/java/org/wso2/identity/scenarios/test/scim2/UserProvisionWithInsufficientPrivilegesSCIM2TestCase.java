@@ -18,6 +18,8 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -54,6 +56,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
     HttpResponse response;
     JSONObject rootObject;
     private SCIM2CommonClient scim2Client;
+    private static final Log log = LogFactory.getLog(UserProvisionWithInsufficientPrivilegesSCIM2TestCase.class);
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -81,7 +84,9 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
                 assertNotNull(userIdentifier);
                 SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                         Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+                log.info("Deleted existing user.");
             } // it is already cleared.
+            Thread.sleep(5000);
         } catch (Exception e) {
             fail("Failed when trying to delete existing user.");
         }
