@@ -58,31 +58,31 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         client = HttpClients.createDefault();
         super.init();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-        cleanUpUser();
+//        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
+//        cleanUpUser();
     }
 
-
-    private void cleanUpUser() {
-
-        try {
-            HttpResponse user = scim2Client.filterUserByAttribute(
-                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-            JSONObject list = getJSONFromResponse(user);
-            if (list.get("totalResults").toString().equals("1")) {
-                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-                assertNotNull(userIdentifier);
-                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-            } // it is already cleared.
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            fail("Failed when trying to delete existing user.");
-        }
-    }
+//
+//    private void cleanUpUser() {
+//
+//        try {
+//            HttpResponse user = scim2Client.filterUserByAttribute(
+//                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
+//            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
+//            JSONObject list = getJSONFromResponse(user);
+//            if (list.get("totalResults").toString().equals("1")) {
+//                JSONArray resourcesArray = (JSONArray) list.get("Resources");
+//                JSONObject userObject = (JSONObject) resourcesArray.get(0);
+//                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
+//                assertNotNull(userIdentifier);
+//                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
+//                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+//            } // it is already cleared.
+//            Thread.sleep(5000);
+//        } catch (Exception e) {
+//            fail("Failed when trying to delete existing user.");
+//        }
+//    }
 
     @Test(description = "1.1.2.1.2.7")
     public void testSCIM2CreateUserWithAllAttributes() throws Exception {
@@ -94,7 +94,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, "scim2CreateUserWithAllAttributes");
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject emailWork = new JSONObject();
@@ -116,7 +116,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, "scim2CreateUserWithAllAttributes", "username not found");
    }
 
     @AfterClass(alwaysRun = true)
