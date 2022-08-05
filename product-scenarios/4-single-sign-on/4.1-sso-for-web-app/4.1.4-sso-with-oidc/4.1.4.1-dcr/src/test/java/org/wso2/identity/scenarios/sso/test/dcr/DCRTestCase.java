@@ -208,6 +208,7 @@ public class DCRTestCase extends ScenarioTestBase {
             return;
         }
 
+        Thread.sleep(10000);
         HttpResponse response = httpCommonClient
                 .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, getCommonHeaders(username, password));
 
@@ -255,6 +256,7 @@ public class DCRTestCase extends ScenarioTestBase {
           dependsOnMethods = { "deleteOAuth2ApplicationByClientId" })
     public void getDeletedOAuth2ApplicationByClientId() throws Exception {
 
+        Thread.sleep(10000);
         HttpResponse response = httpCommonClient
                 .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, getCommonHeaders(username, password));
 
