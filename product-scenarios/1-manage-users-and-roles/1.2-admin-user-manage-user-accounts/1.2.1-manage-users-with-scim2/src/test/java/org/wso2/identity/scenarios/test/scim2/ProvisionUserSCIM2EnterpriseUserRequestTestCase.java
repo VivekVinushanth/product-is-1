@@ -38,7 +38,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTestBase {
 
-    private static final Object TEST_USER_NAME = "scim2CreateEnterpriseUserRequest";
+    private static final String TEST_USER_NAME = "scim2CreateEnterpriseUserRequest";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;

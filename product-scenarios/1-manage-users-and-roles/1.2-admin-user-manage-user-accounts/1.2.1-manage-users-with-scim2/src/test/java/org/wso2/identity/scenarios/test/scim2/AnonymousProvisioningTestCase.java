@@ -46,7 +46,6 @@ import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
-
 public class AnonymousProvisioningTestCase extends ScenarioTestBase {
 
     private static final String TEST_USER_NAME = "scim2selfRegister";
