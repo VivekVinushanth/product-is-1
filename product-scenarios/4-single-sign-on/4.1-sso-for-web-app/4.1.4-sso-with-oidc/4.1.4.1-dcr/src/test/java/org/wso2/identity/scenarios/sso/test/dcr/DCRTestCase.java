@@ -18,8 +18,11 @@ package org.wso2.identity.scenarios.sso.test.dcr;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.message.BasicHeader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,6 +49,7 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 import static org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil.getCommonHeaders;
 
@@ -189,8 +193,14 @@ public class DCRTestCase extends ScenarioTestBase {
         queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME,
                 updateRequestJSON.get(Constants.RegistrationRequestElements.CLIENT_NAME).toString());
 
+        Header[] headers = {
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_JSON),
+                new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password)),
+                new BasicHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
+        };
+
         HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
+                .sendGetRequest(dcrEndpoint, queryParams, headers);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                 "Update application retrieval failed for name: " + updateRequestJSON
@@ -208,8 +218,13 @@ public class DCRTestCase extends ScenarioTestBase {
             return;
         }
 
+        Header[] headers = {
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_JSON),
+                new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password)),
+                new BasicHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
+        };
         HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, getCommonHeaders(username, password));
+                .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, headers);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                 "Updated application retrieval failed for client id: " + clientId + " Request Object: "
@@ -242,8 +257,13 @@ public class DCRTestCase extends ScenarioTestBase {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME, clientName);
 
-        HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
+        Header[] headers = {
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_JSON),
+                new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password)),
+                new BasicHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
+        };
+
+        HttpResponse response = httpCommonClient.sendGetRequest(dcrEndpoint, queryParams, headers);
 
         assertNotEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                 "Failed to delete the application for name: " + registerRequestJSON
@@ -255,8 +275,14 @@ public class DCRTestCase extends ScenarioTestBase {
           dependsOnMethods = { "deleteOAuth2ApplicationByClientId" })
     public void getDeletedOAuth2ApplicationByClientId() throws Exception {
 
+        Header[] headers = {
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_JSON),
+                new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password)),
+                new BasicHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
+        };
+
         HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, getCommonHeaders(username, password));
+                .sendGetRequest(dcrEndpoint + "/" + this.clientId, null, headers);
 
         assertNotEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                 "Updated application retrieval failed for client id: " + clientId + ", Initial request Object: "
