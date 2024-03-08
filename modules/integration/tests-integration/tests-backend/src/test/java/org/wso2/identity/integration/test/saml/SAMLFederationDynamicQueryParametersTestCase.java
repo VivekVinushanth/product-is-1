@@ -145,6 +145,9 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
                                         .idp(IDENTITY_PROVIDER_NAME)
                                         .authenticator(IDP_AUTHENTICATOR_NAME_SAML))));
 
+//        ApplicationDTO applicationDTO = new ApiModelToServiceProvider().apply(applicationModel);
+//        applicationId = applicationMgtRestClient.createApplication(applicationDTO, tenantDomain, username);
+
         appId = applicationMgtRestClient.createApplication(applicationCreationModel);
         ApplicationResponseModel application = applicationMgtRestClient.getApplication(appId);
         Assert.assertNotNull(application, "Failed to create service provider 'SERVICE_PROVIDER'");

@@ -68,6 +68,7 @@ public class ApplicationManagementOAuthFailureTest extends ApplicationManagement
         // Mark for cleanup.
         createdApps.add(createdAppId);
 
+
         // Try to create the application using the same name again.
         Response responseOfSecondCreateAttempt = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         validateErrorResponse(responseOfSecondCreateAttempt, HttpStatus.SC_CONFLICT, "OAUTH-60008");
@@ -75,6 +76,7 @@ public class ApplicationManagementOAuthFailureTest extends ApplicationManagement
 
     @Test (description = "Tests error scenario when two OAuth applications are created with the same clientId.")
     public void testCreateOAuthApplicationsWithClientId() throws Exception {
+
 
         String body = readResource("create-oauth-app-with-predefined-clientid.json");
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
@@ -104,6 +106,7 @@ public class ApplicationManagementOAuthFailureTest extends ApplicationManagement
 
     @Test (description = "Tests error scenario when an OIDC application is created with invalid audience values.")
     public void testCreateOAuthApplicationsWithInvalidAudience() throws Exception {
+
 
         String body = readResource("create-oauth-app-with-invalid-audience-values.json");
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);

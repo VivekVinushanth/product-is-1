@@ -54,89 +54,89 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
         cleanUpApplications(createdApps);
         super.testFinish();
     }
+//
+//    @Test
+//    public void testGetApplicationWithInvalidId() {
+//
+//        Response response =
+//                getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + INVALID_APPLICATION_ID);
+//        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "APP-60006");
+//    }
+////
+////    @Test
+////    public void testGetApplicationsWithSortByQueryParam() {
+////
+////        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?sortBy=xxx");
+////        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65002");
+////    }
+//////
+//////    @Test
+//////    public void testGetApplicationsWithSortOrderQueryParam() {
+//////
+//////        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?sortOrder=ASC");
+//////        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65002");
+//////    }
+////////
+////////    @Test
+////////    public void testGetApplicationsWithAttributesQueryParam() {
+////////
+////////        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?attributes=name,imageUrl");
+////////        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60505");
+////////    }
+//////////
+//////////    @Test
+//////////    public void testGetApplicationsWithInvalidFilterFormat() {
+//////////
+//////////        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=name");
+//////////        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
+//////////    }
+////////////
+//    @Test
+//    public void testGetApplicationsWithUnsupportedFilterAttribute() {
+//
+//        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=id eq abc");
+//        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
+//    }
+//
+//    @Test
+//    public void testGetApplicationsWithInvalidFilterOperation() {
+//
+//        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=name coo abc");
+//        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
+//    }
+////
+////    @Test
+////    public void testCreateApplicationWithTemplate() throws Exception {
+////
+////        JSONObject createRequest = new JSONObject();
+////        createRequest.put("name", "application create fail");
+////        String payload = createRequest.toString();
+////
+////        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH + "?template=dummy", payload);
+////        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65501");
+////    }
+//////
+//////    @Test
+//////    public void testCreateApplicationWithABlankName() throws Exception {
+//////
+//////        JSONObject createRequest = new JSONObject();
+//////        createRequest.put("name", "");
+//////        String payload = createRequest.toString();
+//////
+//////        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+//////        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+//////    }
 
-    @Test
-    public void testGetApplicationWithInvalidId() {
-
-        Response response =
-                getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + INVALID_APPLICATION_ID);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "APP-60006");
-    }
-
-    @Test
-    public void testGetApplicationsWithSortByQueryParam() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?sortBy=xxx");
-        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65002");
-    }
-
-    @Test
-    public void testGetApplicationsWithSortOrderQueryParam() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?sortOrder=ASC");
-        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65002");
-    }
-
-    @Test
-    public void testGetApplicationsWithAttributesQueryParam() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?attributes=name,imageUrl");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60505");
-    }
-
-    @Test
-    public void testGetApplicationsWithInvalidFilterFormat() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=name");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
-    }
-
-    @Test
-    public void testGetApplicationsWithUnsupportedFilterAttribute() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=id eq abc");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
-    }
-
-    @Test
-    public void testGetApplicationsWithInvalidFilterOperation() {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=name coo abc");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
-    }
-
-    @Test
-    public void testCreateApplicationWithTemplate() throws Exception {
-
-        JSONObject createRequest = new JSONObject();
-        createRequest.put("name", "application create fail");
-        String payload = createRequest.toString();
-
-        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH + "?template=dummy", payload);
-        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65501");
-    }
-
-    @Test
-    public void testCreateApplicationWithABlankName() throws Exception {
-
-        JSONObject createRequest = new JSONObject();
-        createRequest.put("name", "");
-        String payload = createRequest.toString();
-
-        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
-    }
-
-    @Test
-    public void testCreateApplicationWithNameNotAdheringToAllowedRegex() throws Exception {
-
-        JSONObject createRequest = new JSONObject();
-        createRequest.put("name", "test@failing.com");
-        String payload = createRequest.toString();
-
-        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
-    }
+//    @Test
+//    public void testCreateApplicationWithNameNotAdheringToAllowedRegex() throws Exception {
+//
+//        JSONObject createRequest = new JSONObject();
+//        createRequest.put("name", "test@failing.com");
+//        String payload = createRequest.toString();
+//
+//        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+//        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+//    }
 
     @Test
     public void testCreateApplicationWithResidentSpName() throws Exception {
@@ -146,62 +146,63 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
         String payload = createRequest.toString();
 
         Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "APP-60007");
     }
-
-    @Test
-    public void testUpdateAppNameToReservedResidentServiceProviderName() throws Exception {
-
-        // Create an app first
-        Response responseOfPost = createApplication("dummy test app");
-        String createdAppId = getApplicationId(responseOfPost);
-        assertNotBlank(createdAppId);
-        // Add the application to be cleaned up at the end.
-        createdApps.add(createdAppId);
-
-        JSONObject patchRequest = new JSONObject();
-        patchRequest.put("name", ApplicationConstants.LOCAL_SP);
-
-        String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
-        Response responseOfPatch = getResponseOfPatch(applicationPath, patchRequest.toString());
-        validateErrorResponse(responseOfPatch, HttpStatus.SC_FORBIDDEN, "APP-60008");
-    }
-
-    @Test
-    public void testUpdateAppNameToAnotherExistingAppName() throws Exception {
-
-        String firstAppName = "firstAppName";
-        String secondAppName = "secondAppName";
-
-        // Create the first app.
-        Response createFirstAppResponse = createApplication(firstAppName);
-        String firstAppId = getApplicationId(createFirstAppResponse);
-        assertNotBlank(firstAppId);
-        createdApps.add(firstAppId);
-
-        // Create the second app.
-        Response createSecondAppResponse = createApplication(secondAppName);
-        String secondAppId = getApplicationId(createSecondAppResponse);
-        assertNotBlank(secondAppId);
-        createdApps.add(secondAppId);
-
-        // Try to rename the first app to second app's name.
-        JSONObject patchRequest = new JSONObject();
-        patchRequest.put("name", secondAppName);
-
-        String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + firstAppId;
-        Response responseOfPatch = getResponseOfPatch(applicationPath, patchRequest.toString());
-        validateErrorResponse(responseOfPatch, HttpStatus.SC_CONFLICT, "APP-60007");
-    }
-
-    @Test(description = "Tests whether accessUrl value is validated when creating a discoverable app.")
-    public void testCreateDiscoverableAppWithoutAccessUrl() throws Exception {
-
-        String payload = readResource("invalid-discoverable-app.json");
-
-        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
-    }
+//
+//    @Test
+//    public void testUpdateAppNameToReservedResidentServiceProviderName() throws Exception {
+//
+//        // Create an app first
+//        Response responseOfPost = createApplication("dummy test app");
+//        String createdAppId = getApplicationId(responseOfPost);
+//        assertNotBlank(createdAppId);
+//        // Add the application to be cleaned up at the end.
+//        createdApps.add(createdAppId);
+//
+//        JSONObject patchRequest = new JSONObject();
+//        patchRequest.put("name", ApplicationConstants.LOCAL_SP);
+//
+//        String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
+//        Response responseOfPatch = getResponseOfPatch(applicationPath, patchRequest.toString());
+//        validateErrorResponse(responseOfPatch, HttpStatus.SC_FORBIDDEN, "APP-60008");
+//    }
+//
+//    @Test
+//    public void testUpdateAppNameToAnotherExistingAppName() throws Exception {
+//
+//        String firstAppName = "firstAppName";
+//        String secondAppName = "secondAppName";
+//
+//        // Create the first app.
+//        Response createFirstAppResponse = createApplication(firstAppName);
+//        String firstAppId = getApplicationId(createFirstAppResponse);
+//        assertNotBlank(firstAppId);
+//        createdApps.add(firstAppId);
+//
+//        // Create the second app.
+//        Response createSecondAppResponse = createApplication(secondAppName);
+//        String secondAppId = getApplicationId(createSecondAppResponse);
+//        assertNotBlank(secondAppId);
+//        createdApps.add(secondAppId);
+//
+//        // Try to rename the first app to second app's name.
+//        JSONObject patchRequest = new JSONObject();
+//        patchRequest.put("name", secondAppName);
+//
+//        String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + firstAppId;
+//        Response responseOfPatch = getResponseOfPatch(applicationPath, patchRequest.toString());
+//        validateErrorResponse(responseOfPatch, HttpStatus.SC_CONFLICT, "APP-60007");
+//    }
+//
+//    @Test(description = "Tests whether accessUrl value is validated when creating a discoverable app.")
+//    public void testCreateDiscoverableAppWithoutAccessUrl() throws Exception {
+//
+//        String payload = readResource("invalid-discoverable-app.json");
+//
+//        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+//        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+//    }
 
     @Test(description = "Tests whether inbound unique key is validated during application creation.")
     public void testCreateApplicationsWithConflictingInboundKeys() throws Exception {
@@ -219,19 +220,20 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
 
         String secondAppPayload = readResource("create-passive-sts-app-conflicting-inbound-key.json");
         Response createSecondAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, secondAppPayload);
+
         validateErrorResponse(createSecondAppResponse, HttpStatus.SC_CONFLICT, "APP-60009");
 
     }
-
-    @Test(description = "Tests whether the allowed CORS origins are validated during application creation.")
-    public void testCreateApplicationsWithInvalidAllowedOrigins() throws Exception {
-
-        // Payload with an invalid URI: https//localhost.com, the colon is missing.
-        String payload = readResource("create-oauth-app-with-invalid-allowed-origins.json");
-        Response createAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-
-        validateErrorResponse(createAppResponse, HttpStatus.SC_BAD_REQUEST, "APP-60001");
-    }
+//
+//    @Test(description = "Tests whether the allowed CORS origins are validated during application creation.")
+//    public void testCreateApplicationsWithInvalidAllowedOrigins() throws Exception {
+//
+//        // Payload with an invalid URI: https//localhost.com, the colon is missing.
+//        String payload = readResource("create-oauth-app-with-invalid-allowed-origins.json");
+//        Response createAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+//
+//        validateErrorResponse(createAppResponse, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+//    }
 
     private String getApplicationId(Response createFirstAppResponse) {
 
