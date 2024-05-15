@@ -226,32 +226,20 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         applicationPatch.setClaimConfiguration(getCustomLocalClaimMapping());
         updateApplication(applicationId, applicationPatch);
 
+        application = getApplication(applicationId);
+        List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
+        Assert.assertNotNull(claimMappings);
+        Assert.assertEquals(claimMappings.size(), 1);
+        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
         if (!isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
             authorizeSystemAPIs(applicationId, new ArrayList<>(Collections.singletonList("/api/server/v1/oidc/scopes")));
             // Associate roles.
             AssociatedRolesConfig associatedRolesConfig =
                     new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
-            // Get Roles.
-            String adminRoleId = getRoleV2ResourceId("admin",
-                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
-            String everyoneRoleId = getRoleV2ResourceId("everyone",
-                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
             applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
-            associatedRolesConfig.addRolesItem(
-                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
-                            adminRoleId));
-            associatedRolesConfig.addRolesItem(
-                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
-                            everyoneRoleId));
             updateApplication(applicationId, applicationPatch);
         }
-
-        application = getApplication(applicationId);
-        List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
-        Assert.assertNotNull(claimMappings);
-        Assert.assertEquals(claimMappings.size(), 1);
-        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
     }
 
     @Test(groups = "wso2.is", description = "Test custom OIDC claim creation.",
@@ -634,6 +622,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     }
 
     private String getLoginUserId() throws Exception {
+
         String userSearchReq = new JSONObject()
                 .put("schemas", new JSONArray().put("urn:ietf:params:scim:api:messages:2.0:SearchRequest"))
                 .put("attributes", new JSONArray().put("id"))
@@ -646,6 +635,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     }
 
     private void updateUserAttribute(String loginUserId, String attributePath, String attributeValue) throws IOException {
+
         UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(OpEnum.ADD);
         updateUserPatchOp.setPath(attributePath);
         updateUserPatchOp.setValue(attributeValue);
